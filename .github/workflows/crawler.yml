@@ -3,6 +3,8 @@ name: Checking Orphaned Debs
 on:
   push:
     branches: [ main ]
+  schedule:
+    - cron: "0 2 * * *"
 
 jobs:
   checking-orphaned-debs:
