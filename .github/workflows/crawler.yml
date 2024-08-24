@@ -19,6 +19,7 @@ jobs:
       - name: Checking new orphaned debs I am interested in
         run: |
           pip install poetry
+          poetry install
           # will create or update package_history.pkl in the same dir
           poetry run ./crawler-wnpp-orphaned.py
 
