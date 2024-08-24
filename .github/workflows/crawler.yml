@@ -12,12 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download previous database of orphaned debs
-        uses: actions/download-artifact@v4
-        with:
-          name: orphaned-debs
-          search-artifacts: true
-
       - name: Checking new orphaned debs I am interested in
         # I want the highlight by failing the job but I want it continue the
         # next step to upload the artifacts i.e. the db
@@ -33,4 +27,12 @@ jobs:
         with:
           name: orphaned-debs
           path: ./package_history.pkl
+
+      - name: Download previous database of orphaned debs
+        uses: actions/download-artifact@v4
+        with:
+          name: orphaned-debs
+          search-artifacts: true
+        # check the artifacts
+        - run: ls
 
