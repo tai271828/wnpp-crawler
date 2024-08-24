@@ -1,0 +1,31 @@
+name: Checking Orphaned Debs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  checking:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download previous database of orphaned debs
+        uses: actions/download-artifact@v4
+        with:
+          name: orphaned-debs
+          search-artifacts: true
+
+      - name: Checking new orphaned debs I am interested in
+        run: |
+          pip install poetry
+          poetry shell
+          # will create or update package_history.pkl in the same dir
+          ./crawler-wnpp-orphaned.py
+
+      - name: Upload updated database of orphaned debs found
+        uses: actions/upload-artifact@v4
+        with:
+          name: orphaned-debs
+          path: ./package_history.pkl
+
