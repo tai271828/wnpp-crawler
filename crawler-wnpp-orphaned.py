@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -67,8 +68,12 @@ def crawl_and_notify():
 
         history.update(new_packages)
         save_history(history)
+
+        # this is for github action: failed the job to highlight the new discovers
+        sys.exit("Found new orphaned packages that you are potentially interested!!")
     else:
         print("No new packages found matching the keywords.")
 
 if __name__ == "__main__":
     crawl_and_notify()
+
