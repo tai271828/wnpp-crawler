@@ -33,6 +33,7 @@ jobs:
         with:
           name: orphaned-debs
           search-artifacts: true
-        # check the artifacts
-        run: ls
+
+      # check the artifacts
+      - run: ls
 
