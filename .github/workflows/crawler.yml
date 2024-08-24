@@ -19,9 +19,8 @@ jobs:
       - name: Checking new orphaned debs I am interested in
         run: |
           pip install poetry
-          poetry shell
           # will create or update package_history.pkl in the same dir
-          ./crawler-wnpp-orphaned.py
+          poetry run ./crawler-wnpp-orphaned.py
 
       - name: Upload updated database of orphaned debs found
         uses: actions/upload-artifact@v4
