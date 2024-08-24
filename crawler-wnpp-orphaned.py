@@ -14,7 +14,7 @@ url = "https://www.debian.org/devel/wnpp/orphaned"
 keywords = ["science", "scientific", "physics", "performance", "hcp", "cfd", "fluid", "MRI", "computational"]
 
 # Fuzzy match threshold (0-100)
-threshold = 85
+threshold = 80
 
 # File to store previously found packages
 history_file = "package_history.pkl"
