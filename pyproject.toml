@@ -8,7 +8,7 @@ packages = [{include = "wnpp_crawler"}]
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.9.13"
+python = ">=3.8"
 requests = "^2.32.3"
 beautifulsoup4 = "^4.12.3"
 fuzzywuzzy = "^0.18.0"
