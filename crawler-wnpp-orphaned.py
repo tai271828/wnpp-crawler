@@ -26,11 +26,11 @@ email_from = os.getenv("SENDGRID_EMAIL_FROM")
 email_to = os.getenv("SENDGRID_EMAIL_TO")
 email_subject = os.getenv("SENDGRID_EMAIL_SUBJECT")
 
-if not api_key or email_from or email_ro or email_subject or email_content:
+if not (api_key and email_from and email_to and email_subject):
     raise ValueError("Necessary environment variables are not set.")
 
 # SendGrid API endpoint
-url = "https://api.sendgrid.com/v3/mail/send"
+url_sendgrid_api = "https://api.sendgrid.com/v3/mail/send"
 
 # Headers
 headers = {
@@ -43,18 +43,20 @@ def send_result_notification(email_content):
     payload = {
         "personalizations": [
             {
-                "to": [{"email": f"email_to"}]
+                "to": [{"email": f"{email_to}"}]
             }
         ],
-        "from": {"email": f"email_from"},
+        "from": {"email": f"{email_from}"},
         "subject": f"email_subject",
         "content": [
-            {"type": "text/plain", "value": f"email_content"}
+            {"type": "text/plain", "value": f"{email_content}"}
         ]
     }
 
+    print(payload)
+
     # Send the POST request
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url_sendgrid_api, json=payload, headers=headers)
 
     # Check the response
     if response.status_code == 202:
@@ -109,11 +111,12 @@ def crawl_and_notify():
     if new_packages:
         email_content="New packages found:\n"
         for package_name in new_packages:
-            print(f"- {package_name}: {new_packages[package_name]}\n")
+            email_content += f"- {package_name}: {new_packages[package_name]}\n"
 
         history.update(new_packages)
         save_history(history)
 
+        print(email_content)
         send_result_notification(email_content)
 
     else:
