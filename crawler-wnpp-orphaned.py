@@ -19,6 +19,51 @@ threshold = 80
 # File to store previously found packages
 history_file = "package_history.pkl"
 
+
+# Fetch the API key from the environment variable
+api_key = os.getenv("SENDGRID_API_KEY")
+email_from = os.getenv("SENDGRID_EMAIL_FROM")
+email_to = os.getenv("SENDGRID_EMAIL_TO")
+email_subject = os.getenv("SENDGRID_EMAIL_SUBJECT")
+email_content = os.getenv("SENDGRID_EMAIL_CONTENT")
+
+if not api_key or email_from or email_ro or email_subject or email_content:
+    raise ValueError("Necessary environment variables are not set.")
+
+# SendGrid API endpoint
+url = "https://api.sendgrid.com/v3/mail/send"
+
+# Email payload
+payload = {
+    "personalizations": [
+        {
+            "to": [{"email": f"email_to"}]
+        }
+    ],
+    "from": {"email": f"email_from"},
+    "subject": f"email_subject",
+    "content": [
+        {"type": "text/plain", "value": f"email_content"}
+    ]
+}
+
+# Headers
+headers = {
+    "Authorization": f"Bearer {api_key}",
+    "Content-Type": "application/json"
+}
+
+def send_result_notification():
+    # Send the POST request
+    response = requests.post(url, json=payload, headers=headers)
+
+    # Check the response
+    if response.status_code == 202:
+        print("Email sent successfully!")
+    else:
+        print(f"Failed to send email: {response.status_code}")
+        print(response.text)
+
 def load_history():
     if os.path.exists(history_file):
         with open(history_file, "rb") as f:
@@ -69,8 +114,8 @@ def crawl_and_notify():
         history.update(new_packages)
         save_history(history)
 
-        # this is for github action: failed the job to highlight the new discovers
-        sys.exit("Found new orphaned packages that you are potentially interested!!")
+        send_result_notification()
+
     else:
         print("No new packages found matching the keywords.")
 
