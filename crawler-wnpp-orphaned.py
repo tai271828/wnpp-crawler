@@ -47,7 +47,7 @@ def send_result_notification(email_content):
             }
         ],
         "from": {"email": f"{email_from}"},
-        "subject": f"email_subject",
+        "subject": f"{email_subject}",
         "content": [
             {"type": "text/plain", "value": f"{email_content}"}
         ]
