@@ -116,7 +116,6 @@ def crawl_and_notify():
         history.update(new_packages)
         save_history(history)
 
-        print(email_content)
         send_result_notification(email_content)
 
     else:
