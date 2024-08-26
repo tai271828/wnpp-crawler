@@ -25,7 +25,6 @@ api_key = os.getenv("SENDGRID_API_KEY")
 email_from = os.getenv("SENDGRID_EMAIL_FROM")
 email_to = os.getenv("SENDGRID_EMAIL_TO")
 email_subject = os.getenv("SENDGRID_EMAIL_SUBJECT")
-email_content = os.getenv("SENDGRID_EMAIL_CONTENT")
 
 if not api_key or email_from or email_ro or email_subject or email_content:
     raise ValueError("Necessary environment variables are not set.")
@@ -33,27 +32,27 @@ if not api_key or email_from or email_ro or email_subject or email_content:
 # SendGrid API endpoint
 url = "https://api.sendgrid.com/v3/mail/send"
 
-# Email payload
-payload = {
-    "personalizations": [
-        {
-            "to": [{"email": f"email_to"}]
-        }
-    ],
-    "from": {"email": f"email_from"},
-    "subject": f"email_subject",
-    "content": [
-        {"type": "text/plain", "value": f"email_content"}
-    ]
-}
-
 # Headers
 headers = {
     "Authorization": f"Bearer {api_key}",
     "Content-Type": "application/json"
 }
 
-def send_result_notification():
+def send_result_notification(email_content):
+    # Email payload
+    payload = {
+        "personalizations": [
+            {
+                "to": [{"email": f"email_to"}]
+            }
+        ],
+        "from": {"email": f"email_from"},
+        "subject": f"email_subject",
+        "content": [
+            {"type": "text/plain", "value": f"email_content"}
+        ]
+    }
+
     # Send the POST request
     response = requests.post(url, json=payload, headers=headers)
 
@@ -106,15 +105,16 @@ def crawl_and_notify():
                 new_packages[package_name] = package_description
                 break
 
+    email_content=""
     if new_packages:
-        print("New packages found:")
+        email_content="New packages found:\n"
         for package_name in new_packages:
-            print(f"- {package_name}: {new_packages[package_name]}")
+            print(f"- {package_name}: {new_packages[package_name]}\n")
 
         history.update(new_packages)
         save_history(history)
 
-        send_result_notification()
+        send_result_notification(email_content)
 
     else:
         print("No new packages found matching the keywords.")
