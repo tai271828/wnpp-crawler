@@ -53,8 +53,6 @@ def send_result_notification(email_content):
         ]
     }
 
-    print(payload)
-
     # Send the POST request
     response = requests.post(url_sendgrid_api, json=payload, headers=headers)
 
